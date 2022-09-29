@@ -1,0 +1,32 @@
+{
+  "manifest_version": 3,
+
+  "name": "VS Code",
+  "version": "2.2",
+
+  "action": {
+    "default_icon": "vscode.png"
+  },
+
+  "background": {
+    "service_worker": "eventPage.js"
+  },
+
+  "icons": {
+    "16": "vscode.png"
+  },
+
+  "commands": {
+    "launchVSCode": {
+      "suggested_key": {
+        "default": "Ctrl+Period",
+        "mac": "Command+Period"
+      },
+      "description": "Launch vscode.dev"
+    }
+  },
+
+  "permissions": ["tabs", "history", "storage"],
+
+  "omnibox": { "keyword": "code" }
+}

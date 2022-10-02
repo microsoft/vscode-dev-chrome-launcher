@@ -40,7 +40,9 @@ let defaultSuggestionURL = '';
 
 function redirect(tab) {
   const url = dotComToDotDev(tab.url);
-  chrome.tabs.update({ url: url !== undefined ? url.toString() : root });
+  if(url !== undefined) {
+    chrome.tabs.update({ url });
+  }
 }
 
 function dotComToDotDev(url) {

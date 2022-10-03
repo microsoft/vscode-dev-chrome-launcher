@@ -220,8 +220,9 @@ chrome.omnibox.onInputChanged.addListener(function(input, suggest) {
       defaultSuggestionURL = suggestions[0].content;
       suggestions = suggestions.slice(1);
     } else if (isSingleKeyword && input.split('/').filter((segment) => segment.trim() !== '').length === 2) {
-      defaultSuggestionDescription = '<match>Open ' + 'https://insiders.vscode.dev/github/' + input + '"</match>';
-      defaultSuggestionURL = 'https://github.com/' + input;
+      const url = 'https://insiders.vscode.dev/github/' + input;
+      defaultSuggestionDescription = '<match>Open ' + url + '"</match>';
+      defaultSuggestionURL = url;
     } else {
       defaultSuggestionDescription = '<match>No match found. Search GitHub with "' +
                                      input + '"</match>';

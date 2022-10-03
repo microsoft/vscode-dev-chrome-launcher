@@ -23,6 +23,7 @@ const invalidGitHubRepositoryOwners = [
   'discussions',
   'sponsors',
   'login',
+  'auth',
   'codesearch',
   'enterprise',
   'enterprises',

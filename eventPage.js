@@ -243,8 +243,8 @@ chrome.omnibox.onInputEntered.addListener(function(input) {
   if (input === undefined) {
     // Launch root vscode.dev instance, equivalent to typing `code` in CLI
     url = 'https://insiders.vscode.dev';
-  } else if (input.startsWith('https://github.com/')) {
-    // If input is a valid Github URL, the user has selected something else than the default option
+  } else if (input.startsWith('https://github.com/') || input.startsWith('https://insiders.vscode.dev')) {
+    // If input is a valid Github or vscode.dev URL, the user has selected something else than the default option
     url = input;
   } else {
     url = defaultSuggestionURL;

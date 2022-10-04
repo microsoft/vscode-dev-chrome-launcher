@@ -40,9 +40,7 @@ let defaultSuggestionURL = '';
 
 function redirect(tab) {
   const url = dotComToDotDev(tab.url);
-  if(url !== undefined) {
-    chrome.tabs.update({ url });
-  }
+  chrome.tabs.update({ url: url !== undefined ? url.toString() : INSIDERS_VSCODE_DEV });
 }
 
 function dotComToDotDev(url) {

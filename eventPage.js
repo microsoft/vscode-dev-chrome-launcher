@@ -41,7 +41,7 @@ let defaultSuggestionURL = '';
 
 function redirect(tab) {
   const url = dotComToDotDev(tab.url);
-  chrome.tabs.update({ url: url !== undefined ? url.toString() : INSIDERS_VSCODE_DEV });
+  chrome.tabs.update({ url: url !== undefined ? url.toString() : `https://${INSIDERS_VSCODE_DEV}` });
 }
 
 function dotComToDotDev(url) {

@@ -31,7 +31,8 @@ const invalidGitHubRepositoryOwners = [
   'team',
   'customer-stories',
   'readme',
-  'pricing'
+  'pricing',
+  'features'
 ];
 let defaultSuggestionURL = '';
 

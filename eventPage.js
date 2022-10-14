@@ -145,6 +145,9 @@ function addRepoToMap(repoMap, owner, repoName, fullName) {
 //#endregion
 
 //#region Chrome extension API event listeners
+
+// Firefox has some support for the Chrome* namespace,
+// so most of these functions will work there as well
 chrome.action.onClicked.addListener((tab) => redirect(tab));
 
 chrome.commands.onCommand.addListener((command) => {
@@ -161,15 +164,18 @@ chrome.commands.onCommand.addListener((command) => {
 chrome.runtime.onStartup.addListener(buildAndSetRepoMap);
 chrome.runtime.onInstalled.addListener(buildAndSetRepoMap);
 
-chrome.omnibox.onDeleteSuggestion.addListener(function(text) {
-  chrome.storage.local.get(REPO_MAP_LOCAL_STORAGE_KEY, function(storageObj) {
-    const repoMap = storageObj.repoMap;
-    delete repoMap[text];
-    chrome.storage.local.set({ repoMap: repoMap }, function() {
-      console.log('RepoMap updated successfully in local storage');
-    });
-  })
-});
+// Firefox does not support `onDeleteSuggestion`
+if (typeof chrome.omnibox.onDeleteSuggestion !== "undefined") { 
+  chrome.omnibox.onDeleteSuggestion.addListener(function(text) {
+    chrome.storage.local.get(REPO_MAP_LOCAL_STORAGE_KEY, function(storageObj) {
+      const repoMap = storageObj.repoMap;
+      delete repoMap[text];
+      chrome.storage.local.set({ repoMap: repoMap }, function() {
+        console.log('RepoMap updated successfully in local storage');
+      });
+    })
+  });
+}
 
 chrome.omnibox.onInputChanged.addListener(function(input, suggest) {
   input = input.trim().toLowerCase();

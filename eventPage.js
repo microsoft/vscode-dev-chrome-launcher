@@ -4,6 +4,8 @@ const GITHUB_COM = 'github.com';
 const GITHUB_DEV = 'github.dev';
 const VSCODE_DEV = 'vscode.dev';
 const INSIDERS_VSCODE_DEV = 'insiders.vscode.dev';
+const DEFAULT_VSCODE_BUILD = VSCODE_DEV;
+const OPTIONS_KEY_FOR_VSCODE_BUILD = 'vsCodeBuild';
 const invalidGitHubRepositoryOwners = [
   'blog',
   'explore',
@@ -38,18 +40,37 @@ let defaultSuggestionURL = '';
 
 //#endregion
 
+//#region extension options
+
+let preferredVSCodeBuildDomain;
+
+chrome.storage.sync.get({
+      vsCodeBuild: DEFAULT_VSCODE_BUILD
+    }, function (items) {
+      preferredVSCodeBuildDomain = items.vsCodeBuild;
+    });
+
+chrome.storage.sync.onChanged.addListener((changes) => 
+{
+  if (changes[OPTIONS_KEY_FOR_VSCODE_BUILD] !== undefined) {
+    preferredVSCodeBuildDomain = changes[OPTIONS_KEY_FOR_VSCODE_BUILD].newValue
+  }
+})
+
+//#endregion
+
 //#region URL transformation helpers
 
 function redirect(tab) {
   const url = dotComToDotDev(tab.url);
-  chrome.tabs.update({ url: url !== undefined ? url.toString() : `https://${INSIDERS_VSCODE_DEV}` });
+  chrome.tabs.update({ url: url !== undefined ? url.toString() : `https://${preferredVSCodeBuildDomain}` });
 }
 
 function dotComToDotDev(url) {
   try {
     url = new URL(url);
     if (url.hostname.endsWith(GITHUB_COM) || url.hostname.endsWith(GITHUB_DEV)) {
-      url.hostname = INSIDERS_VSCODE_DEV;
+      url.hostname = preferredVSCodeBuildDomain;
       url.pathname = `/github${url.pathname}`;
       return url.toString();
     }
@@ -221,7 +242,7 @@ chrome.omnibox.onInputChanged.addListener(function(input, suggest) {
       defaultSuggestionURL = suggestions[0].content;
       suggestions = suggestions.slice(1);
     } else if (isSingleKeyword && input.split('/').filter((segment) => segment.trim() !== '').length === 2) {
-      const url = 'https://insiders.vscode.dev/github/' + input;
+      const url = `https://${preferredVSCodeBuildDomain}/github/` + input;
       defaultSuggestionDescription = '<match>Open ' + url + '"</match>';
       defaultSuggestionURL = url;
     } else {
@@ -243,7 +264,7 @@ chrome.omnibox.onInputEntered.addListener(function(input) {
 
   if (input === undefined) {
     // Launch root vscode.dev instance, equivalent to typing `code` in CLI
-    url = 'https://insiders.vscode.dev';
+    url = `https://${preferredVSCodeBuildDomain}`;
   } else if (input.startsWith('https://github.com/') || input.startsWith('https://insiders.vscode.dev')) {
     // If input is a valid Github or vscode.dev URL, the user has selected something else than the default option
     url = input;

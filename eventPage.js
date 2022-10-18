@@ -42,7 +42,7 @@ let defaultSuggestionURL = '';
 
 //#region extension options
 
-let preferredVSCodeBuildDomain;
+let preferredVSCodeBuildDomain = DEFAULT_VSCODE_BUILD;
 
 chrome.storage.sync.get({
       vsCodeBuild: DEFAULT_VSCODE_BUILD

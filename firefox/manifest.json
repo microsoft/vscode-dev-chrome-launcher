@@ -1,0 +1,34 @@
+{
+  "manifest_version": 3,
+
+  "name": "VS Code",
+  "version": "2.3",
+  "description": "A simple browser extension for opening GitHub repositories in vscode.dev",
+  "action": {
+    "default_icon": "vscode.png"
+  },
+
+  "background": {
+    "scripts": ["eventPage.js"]
+  },
+
+  "icons": {
+    "16": "vscode.png",
+    "48": "vscode.png",
+    "128": "vscode.png"
+  },
+
+  "commands": {
+    "launchVSCode": {
+      "suggested_key": {
+        "default": "Ctrl+Period",
+        "mac": "Command+Period"
+      },
+      "description": "Launch vscode.dev"
+    }
+  },
+
+  "permissions": ["tabs", "history", "storage"],
+
+  "omnibox": { "keyword": "code" }
+}

@@ -44,16 +44,35 @@ let defaultSuggestionURL = '';
 
 let preferredVSCodeBuildDomain = DEFAULT_VSCODE_BUILD;
 
+function updatePreferredVSCodeBuildDomain(newDomain)
+{
+  preferredVSCodeBuildDomain = newDomain;
+
+  // Set icon
+  if (newDomain === DEFAULT_VSCODE_BUILD)
+  {
+    chrome.action.setIcon({
+      path: "/vscode.png"
+    })
+  }
+  else
+  {
+    chrome.action.setIcon({
+      path: "/vscode-insiders.png"
+    })
+  }
+}
+
 chrome.storage.sync.get({
       vsCodeBuild: DEFAULT_VSCODE_BUILD
     }, function (items) {
-      preferredVSCodeBuildDomain = items.vsCodeBuild;
+      updatePreferredVSCodeBuildDomain(items.vsCodeBuild);
     });
 
 chrome.storage.sync.onChanged.addListener((changes) => 
 {
   if (changes[OPTIONS_KEY_FOR_VSCODE_BUILD] !== undefined) {
-    preferredVSCodeBuildDomain = changes[OPTIONS_KEY_FOR_VSCODE_BUILD].newValue
+    updatePreferredVSCodeBuildDomain(changes[OPTIONS_KEY_FOR_VSCODE_BUILD].newValue);
   }
 })
 

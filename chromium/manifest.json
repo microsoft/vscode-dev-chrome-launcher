@@ -9,9 +9,7 @@
   },
 
   "background": {
-    // Chrome only support service workers and Firefox only supports event pages (for now). Comment out the respective line for development
-    // "service_worker": "eventPage.js"
-    "scripts": ["eventPage.js"]
+    "service_worker": "eventPage.js"
   },
 
   "icons": {

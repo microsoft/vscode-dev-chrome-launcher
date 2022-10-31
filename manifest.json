@@ -2,7 +2,7 @@
   "manifest_version": 3,
 
   "name": "VS Code",
-  "version": "2.3",
+  "version": "2.4",
   "description": "A simple browser extension for opening GitHub repositories in vscode.dev",
   "action": {
     "default_icon": "vscode.png"

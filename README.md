@@ -1,6 +1,6 @@
 # Launch insiders.vscode.dev
 
-A simple Chrome/Edge extension for opening GitHub repositories in https://insiders.vscode.dev.
+A simple Chrome/Edge and Firefox extension for opening GitHub repositories in https://insiders.vscode.dev.
 
 ## Features
 

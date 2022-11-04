@@ -28,7 +28,18 @@
     }
   },
 
+  "options_ui": {
+    "page": "options.html"
+  },
+
   "permissions": ["tabs", "history", "storage"],
 
-  "omnibox": { "keyword": "code" }
+  "omnibox": { "keyword": "code" },
+
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "{067b87af-9b3d-4a95-8428-624bae78b5dd}"
+    }
+  }
+
 }

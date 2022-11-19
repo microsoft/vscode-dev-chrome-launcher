@@ -3,18 +3,32 @@
 <head>
   <title>VSCode Extension Options</title>
   <meta charset="utf-8" />
+  <link rel = "stylesheet" type = "text/css" href = "options.css">
 </head>
 
 <body>
+
   <form>
-    <label for="VSCode Build">
-      <select id="build-select" name="VSCode Build">
-        <option value="vscode.dev">Stable</option>
-        <option value="insiders.vscode.dev">Insiders</option>
-      </select>
+    <legend>Select a vscode.dev build:</legend>
+    <div id="group">
+
+      <div class="selection">
+        <input type="radio" id="buildChoice1" name="build" value="vscode.dev" />
+        <label for="buildChoice1">Stable</label>
+      </div>
+
+      <div class="selection">
+        <input type="radio" id="buildChoice2" name="build" value="insiders.vscode.dev" />
+        <label for="buildChoice2">Insiders</label>
+      </div>
+
+    </div>
+
+    <div>
       <button id="build-submit" type="submit">Save</button>
-    </label>
+    </div>
   </form>
+
   <script src="options.js"></script>
 </body>
 </html>

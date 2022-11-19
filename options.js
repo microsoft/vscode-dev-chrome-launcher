@@ -1,9 +1,10 @@
-const buildSelect = document.getElementById('build-select');
-const buildSubmit = document.getElementById('build-submit');
+const form = document.querySelector("form");
+const stableButton = document.getElementById("buildChoice1");
+const insidersButton = document.getElementById("buildChoice2");
 
 // Using sync storage so other browser sessions will have the settings
-function save_options() {
-  var build = buildSelect.value;
+function save_options(data) {
+  const build = data.getAll("build")[0];
 
   chrome.storage.sync.set({
     vsCodeBuild: build
@@ -17,9 +18,22 @@ function restore_options() {
   chrome.storage.sync.get({
     vsCodeBuild: 'vscode.dev'
   }, function (items) {
-    buildSelect.value = items.vsCodeBuild;
+    if (items.vsCodeBuild == 'vscode.dev') {
+      stableButton.checked = true;
+    }
+    else {
+      insidersButton.checked = true;
+    }
   });
 }
 
 document.addEventListener('DOMContentLoaded', restore_options);
-buildSubmit.addEventListener('click', save_options);
+form.addEventListener(
+  "submit",
+  (event) => {
+    const data = new FormData(form);
+    save_options(data);
+    event.preventDefault();
+  },
+  false
+);

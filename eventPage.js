@@ -2,6 +2,8 @@
 const REPO_MAP_LOCAL_STORAGE_KEY = 'repoMap';
 const GITHUB_COM = 'github.com';
 const GITHUB_DEV = 'github.dev';
+const AZURE_REPOS = 'dev.azure.com';
+const AZURE_REPOS_LEGACY = 'visualstudio.com';
 const VSCODE_DEV = 'vscode.dev';
 const INSIDERS_VSCODE_DEV = 'insiders.vscode.dev';
 const DEFAULT_VSCODE_BUILD = VSCODE_DEV;
@@ -91,6 +93,10 @@ function dotComToDotDev(url) {
     if (url.hostname.endsWith(GITHUB_COM) || url.hostname.endsWith(GITHUB_DEV)) {
       url.hostname = preferredVSCodeBuildDomain;
       url.pathname = `/github${url.pathname}`;
+      return url.toString();
+    } else if (url.hostname.endsWith(AZURE_REPOS) || url.hostname.endsWith(AZURE_REPOS_LEGACY)) {
+      url.hostname = preferredVSCodeBuildDomain;
+      url.pathname = `/azurerepos${url.pathname}`;
       return url.toString();
     }
   } catch {}

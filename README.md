@@ -1,6 +1,6 @@
 # Launch insiders.vscode.dev
 
-A simple Chrome/Edge extension for opening GitHub repositories in https://insiders.vscode.dev.
+A simple Chrome/Edge extension for opening GitHub and Azure Repos repositories in https://insiders.vscode.dev.
 
 ## Features
 
@@ -8,7 +8,7 @@ Type `code` into your browser's search bar to activate the omnibox and launch yo
 
 ![Use the omnibox to open recently opened GitHub repositories in insiders.vscode.dev](./omnibox.gif)
 
-Or launch https://insiders.vscode.dev from any GitHub repo or PR page by
+Or launch https://insiders.vscode.dev from any GitHub or Azure Repos repository or PR page by
 1. Typing `Ctrl+.` (default) or `Cmd+.` (Mac)
 2. Clicking on the extension icon
 

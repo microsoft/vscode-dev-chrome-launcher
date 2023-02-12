@@ -2,8 +2,8 @@
   "manifest_version": 3,
 
   "name": "VS Code",
-  "version": "2.4",
-  "description": "A simple browser extension for opening GitHub repositories in vscode.dev",
+  "version": "2.5",
+  "description": "Open GitHub and Azure Repos repositories in vscode.dev from the address bar",
   "action": {
     "default_icon": "vscode.png"
   },

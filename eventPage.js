@@ -89,15 +89,15 @@ function redirect(tab) {
 
 function dotComToDotDev(url) {
   try {
-    url = new URL(url);
-    if (url.hostname.endsWith(GITHUB_COM) || url.hostname.endsWith(GITHUB_DEV)) {
-      url.hostname = preferredVSCodeBuildDomain;
-      url.pathname = `/github${url.pathname}`;
-      return url.toString();
-    } else if (url.hostname.endsWith(AZURE_REPOS) || url.hostname.endsWith(AZURE_REPOS_LEGACY)) {
-      url.hostname = preferredVSCodeBuildDomain;
-      url.pathname = `/azurerepos${url.pathname}`;
-      return url.toString();
+    let parsedUrl = new URL(url);
+    if (parsedUrl.hostname.endsWith(GITHUB_COM) || parsedUrl.hostname.endsWith(GITHUB_DEV)) {
+      parsedUrl.hostname = preferredVSCodeBuildDomain;
+      parsedUrl.pathname = `/github${parsedUrl.pathname}`;
+      return parsedUrl.toString();
+    } else if (parsedUrl.hostname.endsWith(AZURE_REPOS) || parsedUrl.hostname.endsWith(AZURE_REPOS_LEGACY)) {
+      parsedUrl.hostname = preferredVSCodeBuildDomain;
+      parsedUrl.pathname = url;
+      return parsedUrl.toString();
     }
   } catch {}
   return undefined;

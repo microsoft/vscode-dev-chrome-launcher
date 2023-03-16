@@ -94,10 +94,20 @@ function dotComToDotDev(url) {
       url.hostname = preferredVSCodeBuildDomain;
       url.pathname = `/github${url.pathname}`;
       return url.toString();
-    } else if (url.hostname.endsWith(AZURE_REPOS) || url.hostname.endsWith(AZURE_REPOS_LEGACY)) {
+    } else if (url.hostname.endsWith(AZURE_REPOS)) {
       url.hostname = preferredVSCodeBuildDomain;
       url.pathname = `/azurerepos${url.pathname}`;
       return url.toString();
+    } else if (url.hostname.endsWith(AZURE_REPOS_LEGACY)) {
+      const match = new RegExp(
+        `^\/(?:https?://)?(?<organization>[^.]+)${AZURE_REPOS_LEGACY.replace(/\./g, '\\.')}(?:\/defaultcollection)?\/(?<rest>.*)`,
+        'i'
+      ).exec(url.pathname);
+      if (match?.groups?.organization) {
+        url.hostname = preferredVSCodeBuildDomain;
+        url.pathname = `/azurerepos/${match.groups.organization}/${match.groups['rest']}`;
+        return url.toString();
+      }
     }
   } catch {}
   return undefined;

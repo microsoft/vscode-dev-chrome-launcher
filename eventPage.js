@@ -46,19 +46,16 @@ let defaultSuggestionURL = '';
 
 let preferredVSCodeBuildDomain = DEFAULT_VSCODE_BUILD;
 
-function updatePreferredVSCodeBuildDomain(newDomain)
-{
+function updatePreferredVSCodeBuildDomain(newDomain) {
   preferredVSCodeBuildDomain = newDomain;
 
   // Set icon
-  if (newDomain === DEFAULT_VSCODE_BUILD)
-  {
+  if (newDomain === DEFAULT_VSCODE_BUILD) {
     chrome.action.setIcon({
       path: "/vscode.png"
     })
   }
-  else
-  {
+  else {
     chrome.action.setIcon({
       path: "/vscode-insiders.png"
     })
@@ -66,13 +63,12 @@ function updatePreferredVSCodeBuildDomain(newDomain)
 }
 
 chrome.storage.sync.get({
-      vsCodeBuild: DEFAULT_VSCODE_BUILD
-    }, function (items) {
-      updatePreferredVSCodeBuildDomain(items.vsCodeBuild);
-    });
+  vsCodeBuild: DEFAULT_VSCODE_BUILD
+}, function (items) {
+  updatePreferredVSCodeBuildDomain(items.vsCodeBuild);
+});
 
-chrome.storage.sync.onChanged.addListener((changes) => 
-{
+chrome.storage.sync.onChanged.addListener((changes) => {
   if (changes[OPTIONS_KEY_FOR_VSCODE_BUILD] !== undefined) {
     updatePreferredVSCodeBuildDomain(changes[OPTIONS_KEY_FOR_VSCODE_BUILD].newValue);
   }
@@ -96,10 +92,16 @@ function dotComToDotDev(url) {
       return parsedUrl.toString();
     } else if (parsedUrl.hostname.endsWith(AZURE_REPOS) || parsedUrl.hostname.endsWith(AZURE_REPOS_LEGACY)) {
       parsedUrl.hostname = preferredVSCodeBuildDomain;
-      parsedUrl.pathname = url;
+      
+      const urlWithoutSearch = new URL(url);
+      const search = urlWithoutSearch.search;
+      urlWithoutSearch.search = '';
+    
+      parsedUrl.pathname = urlWithoutSearch.toString();
+      parsedUrl.search = search;
       return parsedUrl.toString();
     }
-  } catch {}
+  } catch { }
   return undefined;
 }
 
@@ -134,7 +136,7 @@ function parseRepoFromUrl(url) {
         fullName = owner + '/' + repoName;
       }
     }
-  } catch {}
+  } catch { }
 
   return { owner, repoName, fullName };
 }
@@ -149,26 +151,26 @@ function buildRepoMap(cb) {
     text: 'github',
     startTime: 0,
     maxResults: 1000000
-  }, function(hits) {
-      var repoMap = {};
+  }, function (hits) {
+    var repoMap = {};
 
-      hits.forEach((hit) => {
-        const { owner, repoName, fullName } = parseRepoFromUrl(hit.url);
-        if (!owner || !repoName || !fullName) {
-          return;
-        }
+    hits.forEach((hit) => {
+      const { owner, repoName, fullName } = parseRepoFromUrl(hit.url);
+      if (!owner || !repoName || !fullName) {
+        return;
+      }
 
-        addRepoToMap(repoMap, owner, repoName, fullName);
-      });
+      addRepoToMap(repoMap, owner, repoName, fullName);
+    });
 
-      cb(repoMap);
+    cb(repoMap);
   });
 }
 
 // After building repoMap, set it in local storage
 function buildAndSetRepoMap() {
-  buildRepoMap(function(repoMap) {
-    chrome.storage.local.set({ repoMap: repoMap }, function() {
+  buildRepoMap(function (repoMap) {
+    chrome.storage.local.set({ repoMap: repoMap }, function () {
       console.log('RepoMap built successfully');
     });
   });
@@ -207,22 +209,22 @@ chrome.commands.onCommand.addListener((command) => {
 chrome.runtime.onStartup.addListener(buildAndSetRepoMap);
 chrome.runtime.onInstalled.addListener(buildAndSetRepoMap);
 
-chrome.omnibox.onDeleteSuggestion.addListener(function(text) {
-  chrome.storage.local.get(REPO_MAP_LOCAL_STORAGE_KEY, function(storageObj) {
+chrome.omnibox.onDeleteSuggestion.addListener(function (text) {
+  chrome.storage.local.get(REPO_MAP_LOCAL_STORAGE_KEY, function (storageObj) {
     const repoMap = storageObj.repoMap;
     delete repoMap[text];
-    chrome.storage.local.set({ repoMap: repoMap }, function() {
+    chrome.storage.local.set({ repoMap: repoMap }, function () {
       console.log('RepoMap updated successfully in local storage');
     });
   })
 });
 
-chrome.omnibox.onInputChanged.addListener(function(input, suggest) {
+chrome.omnibox.onInputChanged.addListener(function (input, suggest) {
   input = input.trim().toLowerCase();
 
   const isSingleKeyword = input.split(' ').length === 1 && input !== '';
 
-  chrome.storage.local.get(REPO_MAP_LOCAL_STORAGE_KEY, function(storageObj) {
+  chrome.storage.local.get(REPO_MAP_LOCAL_STORAGE_KEY, function (storageObj) {
     // Go through repoMap, find suggestions based on keyword
     var repoMap = storageObj.repoMap ?? {};
     var suggestions = [];
@@ -250,7 +252,7 @@ chrome.omnibox.onInputChanged.addListener(function(input, suggest) {
         // Multiple keywords
         const keywords = input.trim().toLowerCase().split(' ');
 
-        const inFullName = function(keyword) {
+        const inFullName = function (keyword) {
           return fullName.toLowerCase().includes(keyword);
         };
 
@@ -272,7 +274,7 @@ chrome.omnibox.onInputChanged.addListener(function(input, suggest) {
       defaultSuggestionURL = url;
     } else {
       defaultSuggestionDescription = '<match>No match found. Search GitHub with "' +
-                                     input + '"</match>';
+        input + '"</match>';
       defaultSuggestionURL = 'https://github.com/search?q=' + input.replace(' ', '+');
     }
 
@@ -284,8 +286,8 @@ chrome.omnibox.onInputChanged.addListener(function(input, suggest) {
   });
 });
 
-chrome.omnibox.onInputEntered.addListener(function(input) {
-  let url; 
+chrome.omnibox.onInputEntered.addListener(function (input) {
+  let url;
 
   if (input === undefined) {
     // Launch root vscode.dev instance, equivalent to typing `code` in CLI
@@ -301,25 +303,25 @@ chrome.omnibox.onInputEntered.addListener(function(input) {
     return;
   }
 
-  chrome.tabs.query({ highlighted: true }, function(tab) {
+  chrome.tabs.query({ highlighted: true }, function (tab) {
     chrome.tabs.update(tab.id, { url });
   });
 });
 
-chrome.tabs.onUpdated.addListener(function(tabId, changeInfo) {
+chrome.tabs.onUpdated.addListener(function (tabId, changeInfo) {
   if (changeInfo.url) {
     const { owner, repoName, fullName } = parseRepoFromUrl(changeInfo.url);
     if (!owner || !repoName || !fullName) {
       return;
     }
-    
-    chrome.storage.local.get(REPO_MAP_LOCAL_STORAGE_KEY, function(storageObj) {
+
+    chrome.storage.local.get(REPO_MAP_LOCAL_STORAGE_KEY, function (storageObj) {
       const repoMap = storageObj.repoMap;
       const didUpdateMap = addRepoToMap(repoMap, owner, repoName, fullName);
       if (didUpdateMap) {
         console.log('Adding ' + fullName + ' to repoMap in local storage');
 
-        chrome.storage.local.set({ repoMap: repoMap }, function() {
+        chrome.storage.local.set({ repoMap: repoMap }, function () {
           console.log('RepoMap updated successfully in local storage');
         });
       }
